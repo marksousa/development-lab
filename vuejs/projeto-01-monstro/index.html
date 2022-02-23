@@ -38,13 +38,13 @@
             <div class="lose"v-else>You Lose! :(</div>
         </div>
         <div class="panel buttons">
-            <template>
+            <template v-if="running">
                 <button class="btn attack">Attack</button>
                 <button class="btn especial-attack">Especial Attack</button>
                 <button class="btn heal">Heal</button>
-                <button class="btn give-up">Give Up</button>
+                <button @click("running:False") class="btn give-up">Give Up</button>
             </template>
-            <button class="btn new-game">New Game</button>
+            <button v-else @click("startGame") class="btn new-game">New Game</button>
         </div>
         <div class="panel logs">
             <ul>
