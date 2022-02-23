@@ -24,6 +24,8 @@ def make_guess():
     guess = input("Make a guess: ")
     if validate_guess(guess) :
         return int(guess)
+    else :
+        return make_guess()
 
 def validate_guess(guess):
     regex = re.compile(r"[0-9]+")
@@ -31,7 +33,7 @@ def validate_guess(guess):
 
     if not match:
         print(f"'{guess} is not numeric! Type another valid guess:")
-        make_guess()
+        return False
     else :
         return True
 
