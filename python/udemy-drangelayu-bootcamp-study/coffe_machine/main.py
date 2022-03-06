@@ -20,9 +20,10 @@ till_amount = {
 
 def client_input(msg = "What would you like? (espresso/latte/cappuccino):"):
     """ Display an input, validate the players choice and returns the corresponding choice. """
+
     client_choice = input(msg).lower()
 
-    if client_choice in MENU.keys(): return selling_flow({client_choice: MENU.get(client_choice)})
+    if client_choice in MENU.keys(): return selling_flow(client_choice)
     if client_choice == 'report': return generate_resources_report()
     if client_choice == 'off': return turn_off()
     print("Invalid Option. Try again.")
@@ -37,20 +38,20 @@ def generate_resources_report():
     get_till_amount()
 
 def get_resources_inventory():
-    for eachResource in resources.keys():
-        print(f"{ eachResource.capitalize() }: {resources.get(eachResource)}")
+    for eachResource in resources:
+        print(f"{ eachResource.capitalize() }: {resources.get(eachResource)}{ 'ml' if eachResource in ('water', 'milk') else 'g'}")
 
 def get_till_amount():
-    return print(f"Money: {till_amount.get('money')}")
+    return print(f"Money: ${till_amount.get('money')}")
 
-def verify_disponibility(drink):
+def drink_is_available(drink):
     resource = MENU.get(drink)
     return check_resources(resource["ingredients"])
 
 def check_resources(ingredients):
-    for resource in resources:
-        if resources[resource] < ingredients[resource] : return False
-    return True 
+    for ingredient in ingredients:
+        if resources[ingredient] < ingredients[ingredient] : return {'status': False, 'resource': ingredient}
+    return {'status': True}  
 
 def process_coins():
     print("Please insert coins.")
@@ -62,27 +63,33 @@ def process_coins():
     client_amount_coin = quarters * coins_accepted["quarters"] + dimes * coins_accepted["dimes"] + nickles * coins_accepted["nickles"] + pennies * coins_accepted["pennies"]
     return client_amount_coin
 
-def selling_flow(valid_client_choice):
-    print(valid_client_choice.keys())
+def deduct_resources(ingredients):
+    for ingredient in ingredients:
+        resources[ingredient] -= ingredients[ingredient]
+
+def process_transation(client_pays, drink):
+    dict_drink = MENU.get(drink)
+    drink_price = dict_drink["cost"]
+    if client_pays >= drink_price:
+        till_amount["money"] += drink_price
+        deduct_resources(dict_drink["ingredients"])
+        change = client_pays - drink_price
+        print(f"Here is ${change} dollars in change.")
+        print(f"Here is your {drink}. ☕ Enjoy!")
+
+    else: 
+        print("Sorry that's not enough money. Money refunded.")
+
+def selling_flow(client_drink_choice):
+    available = drink_is_available(client_drink_choice)
     
-    # 1. Check the resources to confirm if drink is available
-    # # 2. Customer insert the coins
-    # # 3. Check the transaction($)
-    #     # 3.1. If >=, calculate the change, deduct the ingredients from the resources inventory and prepare the drink,
-    #     # 3.2. If No, "Print "Sorry that's not enough money. Money refunded."
-    # if valid_client_choice :
-    #     client_wallet = process_coins()
-    #     if client_wallet >= int(valid_client_choice["cost"]):
-    #         print("Ok.")
-    #     else :
-    #         print("Not enough.")
+    if available["status"]:
+        client_pays = process_coins()
+        process_transation(client_pays, client_drink_choice)
+    else:
+        not_enough = drink_is_available(client_drink_choice)
+        print(f"Sorry, there is not enough {not_enough['resource']}.")
 
-def deduct_resources(drink):
-    resources = MENU.get(drink)
-    ingredients = resources["ingredients"]
-
-# def prepare_drink(drink):
-#     print(MENU.get(drink))
-
+# Machine Main Function
 while machine_on:
     client_input()
