@@ -100,6 +100,6 @@ def selling_flow(client_drink_choice):
         not_enough = drink_is_available(client_drink_choice)
         print(f"Sorry, there is not enough {not_enough['resource']}.")
 
-# Machine Main Function
 while machine_on:
+    """Machine Main Function"""
     client_input()
