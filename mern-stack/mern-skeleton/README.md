@@ -175,3 +175,19 @@ mern-skeleton/template.js :
             </body>
         </html>`
     }
+
+To serve this template at the root URL, update the express.js file to import this template and send it in the response to a GET request for the '/' route.
+
+mern-skeleton/server/express.js :
+    
+    import Template from './../template'
+    ...
+    app.get('/', (req, res) => {
+    res.status(200).send(Template())
+    })
+    ...
+
+The mongoose.Schema() function takes a schema definition object as a parameter to
+generate a new Mongoose schema object that will specify the properties or structure
+of each document in a collection. We will discuss this schema definition for the User
+collection before we add any business logic code to complete the user model.

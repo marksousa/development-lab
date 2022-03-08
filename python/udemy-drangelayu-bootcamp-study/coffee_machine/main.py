@@ -82,7 +82,7 @@ def process_transation(client_pays, drink):
     if client_pays >= drink_price:
         till_amount["money"] += drink_price
         deduct_resources(dict_drink["ingredients"])
-        change = client_pays - drink_price
+        change = round(client_pays - drink_price,2)
         print(f"Here is ${change} dollars in change.")
         print(f"Here is your {drink}. ☕ Enjoy!")
     else: 

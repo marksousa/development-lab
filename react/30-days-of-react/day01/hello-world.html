@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Hello world</title>
+    <!-- Script tags including React -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.js"></script>
+    <script src="https://npmcdn.com/babel-core@5.8.38/browser.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div class="new-class"></div>
+    <script type="text/babel">
+      ReactDOM.render(
+        <h1>Hello world! Wake up Neo! Follow the white rabbit.</h1>,
+        document.querySelector("#app")
+      );
+      ReactDOM.render(
+        <strong>Work with classes too!! Nice!</strong>,
+        document.querySelector(".new-class")
+      );
+    </script>
+  </body>
+</html>

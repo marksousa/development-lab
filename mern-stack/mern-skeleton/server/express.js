@@ -15,8 +15,8 @@ app.use(compress());
 app.use(helmet());
 app.use(cors());
 
-export default app;
-
 app.get("/", (req, res) => {
   res.status(200).send(Template());
 });
+
+export default app;
