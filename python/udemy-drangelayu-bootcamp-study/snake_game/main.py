@@ -1,5 +1,7 @@
 from turtle import Turtle, Screen
 
+initial_abscissas = [0, -20, -40]
+
 screen = Screen()
 screen.setup(width=600, height=600)
 screen.bgcolor("black")
@@ -7,20 +9,11 @@ screen.title(titlestring="Snake Game")
 
 # TODO create the snake
 # The initial snake is represented by 3 white squares
-snake_tail = Turtle(shape="square")
-snake_tail.penup()
-snake_tail.color("white")
-snake_tail.setx(x=-40)
-
-snake_body = Turtle(shape="square")
-snake_body.penup()
-snake_body.color("white")
-snake_body.setx(x=-20)
-
-snake_head = Turtle(shape="square")
-snake_head.color("white")
-snake_head.penup()
-snake_head.setx(x=0)
+for abscissa in initial_abscissas:
+    snake_segment = Turtle(shape="square")
+    snake_segment.penup()
+    snake_segment.color("white")
+    snake_segment.setx(x=abscissa)
 
 # TODO move the snake
 # TODO control the snake
