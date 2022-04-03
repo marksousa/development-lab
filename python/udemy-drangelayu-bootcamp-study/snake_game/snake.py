@@ -42,6 +42,16 @@ class Snake:
         # needs to move the first segment to forward
         self.snake_head.forward(MOVE_DISTANCE)
 
+    def add_segment(self, coordinates):
+        new_segment = Turtle(shape="square")
+        new_segment.penup()
+        new_segment.color("white")
+        new_segment.setposition(coordinates)
+        self.segments.append(new_segment)
+
+    def grow(self):
+        self.add_segment(self.segments[-1].position())
+
     def up(self):
         if self.snake_head.heading() != DOWN:
             self.snake_head.setheading(UP)
