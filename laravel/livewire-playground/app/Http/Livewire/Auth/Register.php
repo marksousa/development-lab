@@ -14,7 +14,7 @@ class Register extends Component
 
     protected $rules = [
         'email' => 'required|email|unique:users',
-        'password' => 'required|min:6|same:passwordConfirmation',
+        'password' => 'required|min:5|same:passwordConfirmation',
     ];
 
     protected $messages = [
