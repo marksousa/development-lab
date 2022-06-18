@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -41,7 +41,7 @@ class RegistrationTest extends TestCase
             ->set('password', 'senha123')
             ->set('passwordConfirmation', 'senha123')
             ->call('register')
-            ->assertHasErrors(('email'));
+            ->assertHasErrors((['email' => 'required']));
     }
 
     /** @test */
@@ -49,7 +49,7 @@ class RegistrationTest extends TestCase
     {
         $user = User::create([
             'email' => 'email@email.com',
-            'password' => '123456'
+            'password' => Hash::make('123456'),
         ]);
 
         Livewire::test('auth.register')
@@ -57,18 +57,33 @@ class RegistrationTest extends TestCase
             ->set('password', 'secret')
             ->set('passwordConfirmation', 'secret')
             ->call('register')
-            ->assertHasErrors('email');
+            ->assertHasErrors(['email' => 'unique']);
     }
 
     /** @test */
-    public function nao_permitir_registro_sem_email_valido()
+    public function ver_mensagem_de_erro_ao_inserir_email_ja_cadastrado_no_sistema()
+    {
+        $user = User::create([
+            'email' => 'email@email.com.br',
+            'password' => Hash::make('123456'),
+        ]);
+
+        Livewire::test('auth.register')
+            ->set('email', 'email@email.com')
+            ->assertHasNoErrors()
+            ->set('email', 'email@email.com.br')
+            ->assertHasErrors(['email' => 'unique']);
+    }
+
+    /** @test */
+    public function nao_registro_sem_email_valido()
     {
         Livewire::test('auth.register')
             ->set('email', 'mark')
             ->set('password', 'segredo')
             ->set('passwordConfirmation', 'segredo')
             ->call('register')
-            ->asserthasErrors('email');
+            ->asserthasErrors(['email' => 'email']);
     }
 
     /** @test */
@@ -79,17 +94,17 @@ class RegistrationTest extends TestCase
             ->set('password', 'segredo')
             ->set('passwordConfirmation', 'nao-segredo')
             ->call('register')
-            ->asserthasErrors('password');
+            ->asserthasErrors(['password' => 'same']);
     }
 
-        /** @test */
-        public function senha_tem_no_minimo_6_caracteres()
-        {
-            Livewire::test('auth.register')
+    /** @test */
+    public function senha_tem_no_minimo_6_caracteres()
+    {
+        Livewire::test('auth.register')
             ->set('email', 'teste@email.com.br')
             ->set('password', '12345')
             ->set('passwordConfirmation', '12345')
             ->call('register')
-            ->asserthasErrors('password');
-        }
+            ->asserthasErrors(['password' => 'min']);
+    }
 }
